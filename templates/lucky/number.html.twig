@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet"
+                  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
+                  integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+                  crossorigin="anonymous">
+        {% endblock %}
+    </head>
+    <body>
+
+    <div class="container">
+        {% include 'flash_messages.html.twig' %}
+            {% block body %}
+
+                <div>
+                    {{ form_start(our_form) }}
+                    {{ form_widget(our_form) }}
+                    <input type="submit" value="Submit" class="btn btn-success" />
+                    {{ form_end(our_form) }}
+                </div>
+
+                <div class="row mb-5"></div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Detail</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for msg in messages %}
+                        <tr>
+                            <td>{{msg.title}}</td>
+                            <td>{{msg.detail}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+        {% endblock %}
+    </div>
+        {% block javascripts %}
+
+        {% endblock %}
+    </body>
+</html>

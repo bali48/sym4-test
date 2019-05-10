@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block title %}Blog Posts{% endblock %}
+{% block body %}
+
+    {% for key, value in post %}
+
+        <h3>post title : {{value.title}}</h3>
+        <p>post message : {{value.text}}</p>
+        <hr>
+    {% endfor %}
+{% endblock %}

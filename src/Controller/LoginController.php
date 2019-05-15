@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
@@ -31,8 +32,8 @@ class LoginController extends AbstractController
     {
         $form = $this->createForm(LoginType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $data=$form->getData();
+        if($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
             $repository = $this->getDoctrine()->getRepository(User::class);
 
             $User = $repository->findOneBy([
@@ -40,12 +41,17 @@ class LoginController extends AbstractController
                 'password' => $form->get('password')->getData(),
             ]);
 //            var_dump($User->getId()); exit;
-            $userData['id'] = $User->getId();
-            $userData['name'] = $User->getName();
-            $userData['email'] = $User->getEmail();
-//            dump($userData); exit;
-            $this->session->set('UserData',$userData);
-            return $this->redirectToRoute('dashboard');
+            if ($User){
+                $userData['id'] = $User->getId();
+                    $userData['name'] = $User->getName();
+                $userData['email'] = $User->getEmail();
+    //            dump($userData); exit;
+                $this->session->set('UserData', $userData);
+                return $this->redirectToRoute('dashboard');
+            }
+            else{
+                throw new NotFoundHttpException('No Record Found');
+            }
 
         }
 

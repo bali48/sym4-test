@@ -43,8 +43,10 @@ class DashboardController extends AbstractController
     {
         $userData = $this->session->get('UserData');
 //        dump($userData); exit;
+
         if(!isset($userData)){
-            throw $this->createNotFoundException('Sorry Session Expire');
+            $this->addFlash('success','session hasbeen expire');
+            return $this->redirectToRoute('login');
         }else{
             $this->entityManager = $this->getDoctrine()->getManager();
             $ticket = new Ticket();
@@ -56,10 +58,12 @@ class DashboardController extends AbstractController
 //                dump($request->request->get('Title')); exit;
                 $title = $request->request->get('Title');
                 $Description = $request->request->get('Description');
-                $department = $request->request->get('Department');
+                $departmentdata = $request->request->get('ticket_Department');
+//                dump($departmentdata); exit;
                 $user = $this->getDoctrine()->getRepository(User::class)->find($userData['id']);
                 $status = $this->getDoctrine()->getRepository(Status::class)->find(1);
-//                dump($user); exit;
+                $department = $this->getDoctrine()->getRepository(Department::class)->find($departmentdata);
+
                 $ticket->setTitle($title);
                 $ticket->setDescription($Description);
                 $ticket->setUserid($user);

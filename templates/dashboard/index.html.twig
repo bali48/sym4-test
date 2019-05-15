@@ -303,19 +303,19 @@
             $(this).serializeArray().forEach((object)=>{
                 data[object.name] = object.value;
             });
-            console.log(data);
-
+    //         console.log($('#ticket_Department').val());
+    // return false;
             //TODO: ajax call here with data
             //If ajax call fails because server can't decode
             //Think of doing : data = JSON.stringify(data);
-            console.log(JSON.stringify($("#ticket_new")));
+            // console.log(JSON.stringify($("#ticket_new")));
             $.ajax({
                 url : $(this).attr('action'),
                 type: $(this).attr('method'),
                 data : {
                     'Title':$('#ticket_Title').val(),
                     'Description':$('#ticket_Description').val(),
-                    'ticket_Department': $('#ticket_Department :selected').text()
+                    'ticket_Department': $('#ticket_Department').val()
                 },
                 success: function(data1,status) {
                     // Replace current position field ...

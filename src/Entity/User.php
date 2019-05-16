@@ -7,278 +7,125 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * User
+ *
+ * @ORM\Table(name="user")
+ * @ORM\Entity
  */
 class User
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string")
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="dob", type="datetime", nullable=true)
      */
     private $dob;
 
     /**
-     * @ORM\Column(type="guid")
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @var string|null
+     *
+     * @ORM\Column(name="guid", type="guid", length=36, nullable=true, options={"fixed"=true})
      */
     private $guid;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="createdat", type="datetime", nullable=true)
      */
     private $createdat;
 
     /**
-     * @ORM\Column(type="text")
+     * @var string|null
+     *
+     * @ORM\Column(name="createdby", type="text", length=0, nullable=true)
      */
     private $createdby;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="updatedat", type="datetime", nullable=true)
      */
     private $updatedat;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="updatedby", type="text", length=0, nullable=true)
      */
     private $updatedby;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string|null
+     *
+     * @ORM\Column(name="password", type="string", length=255, nullable=true)
      */
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="userid")
+     * @ORM\OneToMany(targetEntity="UserLogs_backup.php", mappedBy="user", orphanRemoval=true)
      */
-    private $tickets;
+    private $userLogs;
 
     public function __construct()
     {
-        $this->tickets = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getDob(): ?\DateTimeInterface
-    {
-        return $this->dob;
-    }
-
-    public function setDob(\DateTimeInterface $dob): self
-    {
-        $this->dob = $dob;
-
-        return $this;
-    }
-
-    public function getGuid(): ?string
-    {
-        return $this->guid;
-    }
-
-    public function setGuid(string $guid): self
-    {
-        $this->guid = $guid;
-
-        return $this;
-    }
-
-    public function getCreatedat(): ?\DateTimeInterface
-    {
-        return $this->createdat;
-    }
-
-    public function setCreatedat(?\DateTimeInterface $createdat): self
-    {
-        $this->createdat = $createdat;
-
-        return $this;
-    }
-
-    public function getCreatedby(): ?string
-    {
-        return $this->createdby;
-    }
-
-    public function setCreatedby(string $createdby): self
-    {
-        $this->createdby = $createdby;
-
-        return $this;
-    }
-
-    public function getUpdatedat(): ?\DateTimeInterface
-    {
-        return $this->updatedat;
-    }
-
-    public function setUpdatedat(?\DateTimeInterface $updatedat): self
-    {
-        $this->updatedat = $updatedat;
-
-        return $this;
-    }
-
-    public function getUpdatedby(): ?string
-    {
-        return $this->updatedby;
-    }
-
-    public function setUpdatedby(?string $updatedby): self
-    {
-        $this->updatedby = $updatedby;
-
-        return $this;
-    }
-
-    
-    
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
+        $this->userLogs = new ArrayCollection();
     }
 
     /**
-     * @return Collection|Ticket[]
+     * @return Collection|UserLogsBackup[]
      */
-    public function getTickets(): Collection
+    public function getUserLogs(): Collection
     {
-        return $this->tickets;
+        return $this->userLogs;
     }
 
-    public function addTicket(Ticket $ticket): self
+    public function addUserLog(UserLogsBackup $userLog): self
     {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets[] = $ticket;
-            $ticket->setUserid($this);
+        if (!$this->userLogs->contains($userLog)) {
+            $this->userLogs[] = $userLog;
+            $userLog->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeTicket(Ticket $ticket): self
+    public function removeUserLog(UserLogsBackup $userLog): self
     {
-        if ($this->tickets->contains($ticket)) {
-            $this->tickets->removeElement($ticket);
+        if ($this->userLogs->contains($userLog)) {
+            $this->userLogs->removeElement($userLog);
             // set the owning side to null (unless already changed)
-            if ($ticket->getUserid() === $this) {
-                $ticket->setUserid(null);
+            if ($userLog->getUser() === $this) {
+                $userLog->setUser(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
 
-    /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
-     */
-    public function getPassword()
-    {
-        return null;
-    }
-
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-
-    /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
-     */
-    public function getUsername()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
-    {
-        return null;
-    }
 }

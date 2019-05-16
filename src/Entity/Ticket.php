@@ -5,132 +5,72 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
- * @ORM\HasLifecycleCallbacks()
+ * Ticket
+ *
+ * @ORM\Table(name="ticket", indexes={@ORM\Index(name="IDX_97A0ADA358E0A285", columns={"userid_id"}), @ORM\Index(name="UNIQ_97A0ADA3AE80F5DF", columns={"department_id"}), @ORM\Index(name="UNIQ_97A0ADA31A6743D8", columns={"statusid_id"})})
+ * @ORM\Entity
  */
 class Ticket
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
-    private $Title;
+    private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=0, nullable=false)
      */
-    private $Description;
+    private $description;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="createdat", type="datetime", nullable=true)
      */
     private $createdat;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tickets")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userid;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Status", inversedBy="ticket", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @var \Status
+     *
+     * @ORM\ManyToOne(targetEntity="Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="statusid_id", referencedColumnName="id")
+     * })
      */
     private $statusid;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Department", inversedBy="ticket", cascade={"persist", "remove"})
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="userid_id", referencedColumnName="id")
+     * })
      */
-    private $Department;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->Title;
-    }
-
-    public function setTitle(string $Title): self
-    {
-        $this->Title = $Title;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(string $Description): self
-    {
-        $this->Description = $Description;
-
-        return $this;
-    }
-
-    public function getCreatedat(): ?\DateTimeInterface
-    {
-        return $this->createdat;
-    }
-
-    public function setCreatedat(?\DateTimeInterface $createdat): self
-    {
-        $this->createdat = $createdat;
-
-        return $this;
-    }
-
-    public function getUserid(): ?User
-    {
-        return $this->userid;
-    }
-
-    public function setUserid(?User $userid): self
-    {
-        $this->userid = $userid;
-
-        return $this;
-    }
-
-    public function getStatusid(): ?Status
-    {
-        return $this->statusid;
-    }
-
-    public function setStatusid(Status $statusid): self
-    {
-        $this->statusid = $statusid;
-
-        return $this;
-    }
-
-    public function getDepartment(): ?Department
-    {
-        return $this->Department;
-    }
-
-    public function setDepartment(?Department $Department): self
-    {
-        $this->Department = $Department;
-
-        return $this;
-    }
+    private $userid;
 
     /**
-     * @ORM\PrePersist
+     * @var \Department
+     *
+     * @ORM\ManyToOne(targetEntity="Department")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="department_id", referencedColumnName="id")
+     * })
      */
-    public function setCreatedAtValue()
-    {
-        $this->createdat = new \DateTime();
-    }
+    private $department;
+
+
 }
